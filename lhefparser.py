@@ -8,12 +8,12 @@ INIT_TAG = '<init>'
 INIT_END_TAG = '</init>'
 FILE_END_TAG = '</LesHouchesEvents>'
 
-units = {'eV' : 1, 
-         'keV' : 10**3,
-         'MeV' : 10**6,
-         'GeV' : 10**9,
-         'TeV' : 10**12,
-         'PeV' : 10**15}
+prefixes = {'eV' : 1, 
+            'keV' : 10**3,
+            'MeV' : 10**6,
+            'GeV' : 10**9,
+            'TeV' : 10**12,
+            'PeV' : 10**15}
 
 class Parameters(NamedTuple):
     id_a : int # IDBMUP(1)
@@ -113,16 +113,16 @@ def PrintParticles(process): # Prints list of particles present in the event wit
         except KeyError:
             print(i, ':', idp, '-', 'unknown')
 
-def CreateHistogram(process, particles, parameter, unit, bins): # Creates histogram
+def CreateHistogram(process, particles, unit, prefix, bins): # Creates histogram
     data = []
     for event in process.events:
         for i in particles:
-            data.append(getattr(event.particles[i], parameter))
+            data.append(getattr(event.particles[i], unit))
 
-    data = [i / units[unit] for i in data]
+    data = [i / units[prefix] for i in data]
 
     plt.hist(data, bins=bins, histtype='step', color='black')
-    label = parameter + ' [' + unit + ']'
+    label = unit + ' [' + unit + ']'
     plt.xlabel(label)
     plt.ylabel('count')
     plt.xticks(rotation='vertical')
