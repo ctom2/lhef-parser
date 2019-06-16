@@ -35,6 +35,12 @@ Process
             └── Particle(x)
 ```
 
+For creating histograms the package includes method `CreateHistogram`. The method requires five parameters:\
+`process` - class Process that is returned by the `ReadLHEF` function\
+`particles` - particles used for creating the distribution, passed as list (e.g. [3,4])\
+`unit` - unit used for creating the distribution, passed as string ('px', 'py', 'pz', 'E', 'M')\
+`prexif` - unit conversion, parameter is passed as string ('eV', 'keV', 'MeV', ...)\
+`bins` - number of bins
 
 ## Author
 Tomáš Chobola, 2019
