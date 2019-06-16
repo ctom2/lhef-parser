@@ -1,10 +1,19 @@
 import re
 from typing import NamedTuple
+from matplotlib import pyplot as plt
+from particles import particles
 
 EVENT_TAG = '<event>'
 INIT_TAG = '<init>'
 INIT_END_TAG = '</init>'
 FILE_END_TAG = '</LesHouchesEvents>'
+
+units = {'eV' : 1, 
+         'keV' : 10**3,
+         'MeV' : 10**6,
+         'GeV' : 10**9,
+         'TeV' : 10**12,
+         'PeV' : 10**15}
 
 class Parameters(NamedTuple):
     id_a : int # IDBMUP(1)
@@ -32,8 +41,8 @@ class Particle(NamedTuple):
     px : float # PUP(1)
     py : float # PUP(2)
     pz : float # PUP(3)
-    e : float # PUP(4)
-    m : float # PUP(5)
+    E : float # PUP(4)
+    M : float # PUP(5)
     lifetime : float # VTIMUP
     spin : float # SPINUP
 
@@ -50,7 +59,7 @@ class Process(NamedTuple):
     init : Parameters
     events : list
 
-def ReadLHEF(filepath):
+def ReadLHEF(filepath): # Reads LHEF file and stores the information in according classes
     fp = open(filepath)
     init = []
     line = fp.readline()
@@ -60,6 +69,7 @@ def ReadLHEF(filepath):
     line = fp.readline()
     while line.strip() != INIT_END_TAG: # Reading the initialisation parameters
         line = re.sub('\s+', ' ', line).strip().split(' ')
+        line = [float(i) for i in line]
         init = init + line
         line = fp.readline()
 
@@ -70,13 +80,20 @@ def ReadLHEF(filepath):
         if line.strip() == EVENT_TAG:
             line = fp.readline()
             line = re.sub('\s+', ' ', line).strip().split(' ')
-            line = [float(i) for i in line]
-            line[0], line[1] = int(line[0]), int(line[1])
+            line[0:2] = map(int, line[0:2])
+            line[2:6] = map(float, line[2:6])
             e = Event(*line, [])
 
             for i in range(e.nparticles):
                 line = fp.readline()
                 line = re.sub('\s+', ' ', line).strip().split(' ')
+                line[0:6] = map(int, line[0:6])
+                line[6:13] = map(float, line[6:13])
+                line[6] = line[6] * 10**9 # from GeV to eV
+                line[7] = line[7] * 10**9 # from GeV to eV
+                line[8] = line[8] * 10**9 # from GeV to eV
+                line[9] = line[9] * 10**9 # from GeV to eV
+                line[10] = line[10] * 10**9 # from GeV to eV
                 e.particles.append(Particle(*line))
 
             p.events.append(e)
@@ -84,3 +101,29 @@ def ReadLHEF(filepath):
         line = fp.readline()
 
     return p
+
+def PrintParticles(process): # Prints list of particles present in the event with their indexes
+    print('Event particles:')
+    for i in range(len(process.events[0].particles)):
+        idp = process.events[0].particles[i].pdgid
+        try:
+            if particles[idp]:
+                print(i, ':', idp, '-', particles[idp])
+
+        except KeyError:
+            print(i, ':', idp, '-', 'unknown')
+
+def CreateHistogram(process, particles, parameter, unit, bins): # Creates histogram
+    data = []
+    for event in process.events:
+        for i in particles:
+            data.append(getattr(event.particles[i], parameter))
+
+    data = [i / units[unit] for i in data]
+
+    plt.hist(data, bins=bins, histtype='step', color='black')
+    label = parameter + ' [' + unit + ']'
+    plt.xlabel(label)
+    plt.ylabel('count')
+    plt.xticks(rotation='vertical')
+    plt.show()
