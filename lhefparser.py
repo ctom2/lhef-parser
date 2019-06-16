@@ -84,5 +84,3 @@ def ReadLHEF(filepath):
         line = fp.readline()
 
     return p
-
-p = ReadLHEF('evrecout.dat')
