@@ -119,11 +119,14 @@ def CreateHistogram(process, particles, unit, prefix, bins): # Creates histogram
         for i in particles:
             data.append(getattr(event.particles[i], unit))
 
-    data = [i / units[prefix] for i in data]
+    data = [i / prefixes[prefix] for i in data]
 
     plt.hist(data, bins=bins, histtype='step', color='black')
-    label = unit + ' [' + unit + ']'
+    label = unit + ' [' + prefix + ']'
     plt.xlabel(label)
     plt.ylabel('count')
     plt.xticks(rotation='vertical')
     plt.show()
+
+p = ReadLHEF('evrecout.dat')
+CreateHistogram(p, [3,4], 'M', 'keV', 100)
