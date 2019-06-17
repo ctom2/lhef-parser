@@ -1,7 +1,6 @@
 import re
 from typing import NamedTuple
 from matplotlib import pyplot as plt
-from particles import particles
 
 EVENT_TAG = '<event>'
 INIT_TAG = '<init>'
@@ -102,17 +101,6 @@ def ReadLHEF(filepath): # Reads LHEF file and stores the information in accordin
 
     return p
 
-def PrintParticles(process): # Prints list of particles present in the event with their indexes
-    print('Event particles:')
-    for i in range(len(process.events[0].particles)):
-        idp = process.events[0].particles[i].pdgid
-        try:
-            if particles[idp]:
-                print(i, ':', idp, '-', particles[idp])
-
-        except KeyError:
-            print(i, ':', idp, '-', 'unknown')
-
 def CreateHistogram(process, particles, unit, prefix, bins): # Creates histogram
     data = []
     for event in process.events:
@@ -127,6 +115,3 @@ def CreateHistogram(process, particles, unit, prefix, bins): # Creates histogram
     plt.ylabel('count')
     plt.xticks(rotation='vertical')
     plt.show()
-
-p = ReadLHEF('evrecout.dat')
-CreateHistogram(p, [3,4], 'M', 'keV', 100)
