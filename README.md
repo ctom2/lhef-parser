@@ -35,6 +35,7 @@ Process
             └── Particle(x)
 ```
 
+⚠️ Function `CreateHistogram` needs further updates ⚠️
 For creating histograms the package includes method `CreateHistogram`. The method requires five parameters:\
 `process` - class Process that is returned by the `ReadLHEF` function\
 `particles` - particles used for creating the distribution, passed as list (e.g. [3,4])\
