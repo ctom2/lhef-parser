@@ -1,6 +1,11 @@
 import re
 from typing import NamedTuple
 from matplotlib import pyplot as plt
+from matplotlib.ticker import ScalarFormatter,AutoMinorLocator
+import matplotlib as mpl
+import numpy as np
+from math import exp
+import os
 
 EVENT_TAG = '<event>'
 INIT_TAG = '<init>'
@@ -72,6 +77,9 @@ def ReadLHEF(filepath): # Reads LHEF file and stores the information in accordin
         init = init + line
         line = fp.readline()
 
+    init[2] = init[2] * 10**9 # from GeV to eV
+    init[3] = init[3] * 10**9 # from GeV to eV
+
     p = Process(Parameters(*init),[])
 
     line = fp.readline()
@@ -101,7 +109,7 @@ def ReadLHEF(filepath): # Reads LHEF file and stores the information in accordin
 
     return p
 
-def CreateHistogram(process, particles, unit, prefix, bins): # Creates histogram
+def GetData(process, particles, unit, prefix): # Creates histogram
     data = []
     for event in process.events:
         for i in particles:
@@ -109,9 +117,4 @@ def CreateHistogram(process, particles, unit, prefix, bins): # Creates histogram
 
     data = [i / prefixes[prefix] for i in data]
 
-    plt.hist(data, bins=bins, histtype='step', color='black')
-    label = unit + ' [' + prefix + ']'
-    plt.xlabel(label)
-    plt.ylabel('count')
-    plt.xticks(rotation='vertical')
-    plt.show()
+    return data
