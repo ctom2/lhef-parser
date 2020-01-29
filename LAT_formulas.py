@@ -9,8 +9,6 @@ def Theta(event, i):
     # if calculating for a pair -> e.g. xi with pseudorapidity (using constant indexes)
     else:
         p_z_sum = event.particles[3].pz + event.particles[4].pz
-
-        # WRITE ANDRE THAT IT WORKS ONLY WITH ENERGY AND NOT MOMENTUM
         p = event.particles[2].E
 
     cos_theta = p_z_sum/p

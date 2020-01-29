@@ -46,7 +46,7 @@ g = LAT_getter(p)
 # getting the labels and bins configuration
 labels, bins = g.Control()
 
-# is the plots are going to be saved, the filename is initialized
+# if the plots are going to be saved, the filename is initialized
 file_start = ''
 if args.save:
     if args.make_plots:
