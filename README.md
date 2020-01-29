@@ -6,7 +6,7 @@ Simple LHEF parser written in Python that can be used without ROOT was created f
 * γγ → ee
 * Axion-Like Particle production
 
-The histogram production is handled by terminal commands.
+The histogram production is handled by the following terminal commands:
 
 ```
 positional arguments:
