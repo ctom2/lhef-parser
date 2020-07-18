@@ -1,5 +1,4 @@
 import LAT_formulas as form
-import LAT_groups as groups
 
 class LAT_getter:
     # input parameter is the process class from LAT_reader.py
@@ -12,29 +11,7 @@ class LAT_getter:
         # sqrt(s) = 13 GeV
         self.sqrt_s = 13000
 
-    # returns labels for plots and bins configurations
-    def Control(self):
-        # generated system PDGID
-        sysid = self.events[0].particles[2].pdgid
-        # product particle PDGID
-        pdgid = self.events[0].particles[3].pdgid
-
-        # ALP system
-        if sysid is 90:
-            return groups.alp, groups.ALP_bins
-        # SM system
-        else:
-            if pdgid is 22:
-                # photon
-                return groups.gg, groups.SM_bins
-            elif pdgid is 13:
-                # muon
-                return groups.mm, groups.SM_bins
-            elif pdgid is 11:
-                # electron
-                return groups.ee, groups.SM_bins
-
-    # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    # ========================================================
 
     # returns the energy component based on index i
     def Energy(self, i):
@@ -52,11 +29,10 @@ class LAT_getter:
             return [form.XiY(event, self.sqrt_s) for event in self.events]
 
     # returns the relative energy loss of a beam proton
-    def ProtonLoss(self, i):
-        if i is 0: 
-            return [form.XiProton(event, i, self.energy_a) for event in self.events]
-        elif i is 1: 
-            return [form.XiProton(event, i, self.energy_b) for event in self.events]
+    def ProtonLoss(self): 
+        return [
+            (form.XiProton(event, 0, self.energy_a), form.XiProton(event, 1, self.energy_b)) for event in self.events
+             ]
 
     # returns the theta
     def Theta(self, i):
