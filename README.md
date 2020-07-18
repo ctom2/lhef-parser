@@ -4,7 +4,7 @@ Simple LHEF parser written in Python that can be used without ROOT. Created for 
 * γγ → γγ
 * γγ → µµ
 * γγ → ee
-* Axion-Like Particle production
+* Axion-like particle production
 
 ## Author
 Tomáš Chobola, 2020
